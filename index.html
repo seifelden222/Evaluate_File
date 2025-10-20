@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project Name - Home</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header py-3 bg-white shadow-sm">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light p-0">
+          <a class="navbar-brand d-flex align-items-center" href="#">
+            <div class="logo-circle me-2">M</div>
+            <span class="h5 mb-0">Project Name</span>
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+            </ul>
+            <div class="d-flex ms-lg-3">
+              <a href="#" class="btn btn-primary">Get started</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero text-center text-white position-relative">
+      <div class="hero-bg"></div>
+      <div class="container py-5">
+        <h1 class="display-5 fw-bold text-dark">
+          Make your digital work simpler & faster
+        </h1>
+        <p class="lead text-dark">
+          Tools and services to manage your files and collaborate with your team
+          effortlessly.
+        </p>
+        <a href="#" class="btn btn-lg btn-primary mt-3">Get started</a>
+      </div>
+    </section>
+
+    <main class="container my-5">
+      <section class="features row text-center g-4">
+        <div class="col-md-4">
+          <div class="card feature-card p-4 h-100 shadow-sm">
+            <div class="icon mb-3">👥</div>
+            <h5>Team Collaboration</h5>
+            <p class="text-muted small">
+              Collaborate with your team in real-time and keep work organized.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card feature-card p-4 h-100 shadow-sm">
+            <div class="icon mb-3">🔒</div>
+            <h5>Security & Privacy</h5>
+            <p class="text-muted small">
+              We protect your data with industry-standard security measures.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card feature-card p-4 h-100 shadow-sm">
+            <div class="icon mb-3">⚡</div>
+            <h5>Fast Performance</h5>
+            <p class="text-muted small">
+              Optimized for speed so your team stays productive.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="upload-card my-5">
+        <div class="card shadow-lg p-4">
+          <!-- <div class="row align-items-center"> -->
+            <div class="col-md-12">
+              <h5 class="mb-3 text-center text-info">Evaluations</h5>
+              <form class="d-flex gap-2 flex-wrap" method="post" action="http://127.0.0.1:8000/send_file" enctype="multipart/form-data" id="upload-form">
+                <input
+                  type="text"
+                  id="name"
+                  class="form-control flex-grow-1"
+                  placeholder=" Enter name" />
+                  <p  id="name_err" class=""></p>
+                <input
+                  type="text"
+                  id="phone"
+                  class="form-control flex-grow-1"
+                  placeholder="Enter phone numbuer" />
+                  <p class="text-center " id="phone_err"></p>
+
+                <input
+                  class="form-control flex-grow-1"
+                  id="file"
+                  type="file"
+                  placeholder="Upload File" />
+                  <p class="text-center" id="file_err"></p>
+                
+              <textarea class="form-control flex-grow-1" id="note" rows="3" placeholder="Enter note"></textarea>
+
+                  <input type="submit" class="btn btn-info">
+
+              </form>
+            <!-- </div> -->
+          </div>
+        </div>
+      </section>
+
+      <section class="testimonials text-center my-5">
+        <h4 class="mb-4">Customer Testimonials</h4>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <img
+                src=""
+                alt="avatar"
+                class="rounded-circle mx-auto d-block mb-3 avatar" />
+              <h6 class="mb-1">John Doe</h6>
+              <p class="small text-muted">
+                Great service — very easy to use. Highly recommended.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <img
+                src=""
+                alt="avatar"
+                class="rounded-circle mx-auto d-block mb-3 avatar" />
+              <h6 class="mb-1">Jane Smith</h6>
+              <p class="small text-muted">
+                Helped us organize our files efficiently.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+              <img
+                src=""
+                alt="avatar"
+                class="rounded-circle mx-auto d-block mb-3 avatar" />
+              <h6 class="mb-1">Alex Johnson</h6>
+              <p class="small text-muted">
+                A complete platform that supports our daily workflow.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer bg-dark text-white py-4">
+      <div class="container text-center small">
+        <p class="mb-0">© 2025 project name. All rights reserved.</p>
+      </div>
+    </footer>
+<script src="main.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+  </body>
+</html>

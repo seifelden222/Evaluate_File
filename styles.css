@@ -1,0 +1,93 @@
+.root,
+html,
+body {
+  height: 100%;
+}
+
+/* Base */
+body {
+  font-family: "Inter", Tahoma, Arial, sans-serif;
+  background: #f3f6f8;
+  color: #263238;
+  line-height: 1.6;
+  direction: ltr;
+}
+
+.site-header .logo-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0d6efd;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    rgba(9, 30, 66, 0.55),
+    rgba(37, 99, 235, 0.35)
+  );
+  background-size: cover;
+  background-position: center;
+}
+.hero .container {
+  position: relative;
+  z-index: 2;
+}
+
+.feature-card .icon {
+  font-size: 28px;
+}
+/* .upload-card .card{ border-radius:8px } */
+.avatar {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}
+.site-footer {
+  border-top: 4px solid rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 767px) {
+  .navbar-collapse {
+    text-align: center;
+  }
+  .hero {
+    padding: 3rem 0;
+  }
+}
+
+.btn-primary {
+  background: #0d6efd;
+  border-color: #0d6efd;
+}
+.btn-outline-primary {
+  color: #0d6efd;
+  border-color: #0d6efd;
+}
+.btn:focus,
+.nav-link:focus {
+  outline: 3px solid rgba(13, 110, 253, 0.15);
+  outline-offset: 2px;
+}
+.card {
+  border-radius: 10px;
+}
+#submit input[type="submit"] .value{ 
+  cursor: pointer;
+  color: white;
+}
