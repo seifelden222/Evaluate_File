@@ -37,7 +37,9 @@
       </div>
     </main>
 
-    <script>
+  <!-- DOMPurify for sanitizing server-returned HTML before injection -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
+  <script>
       (function () {
         function decode(v) {
           try { return decodeURIComponent(v.replace(/\+/g, ' ')); } 
@@ -53,19 +55,69 @@
             .replace(/'/g, '&#39;');
         }
 
-        const params = {};
-        const qs = window.location.search.replace(/^\?/, '');
-        if (qs) {
-          qs.split('&').forEach(function (pair) {
-            const parts = pair.split('=');
-            const key = decode(parts[0] || '').trim();
-            const val = decode(parts[1] || '');
-            if (!key) return;
-            params[key] = val;
-          });
+        const area = document.getElementById('result-area');
+
+        // Try to read server response from sessionStorage first (set by main.js)
+        let serverData = null;
+        let serverHtml = null;
+        try {
+          serverHtml = sessionStorage.getItem('uploadResultHtml');
+        } catch (e) {
+          console.warn('Could not read uploadResultHtml from sessionStorage', e);
+        }
+        try {
+          const raw = sessionStorage.getItem('uploadResult');
+          if (raw) serverData = JSON.parse(raw);
+        } catch (e) {
+          console.warn('Could not read uploadResult from sessionStorage', e);
+          serverData = null;
         }
 
-        const area = document.getElementById('result-area');
+        // If server returned HTML, sanitize and display it immediately then stop
+        if (serverHtml) {
+          try {
+            const clean = DOMPurify.sanitize(serverHtml, {ALLOWED_URI_REGEXP: /^(?:(?:http|https|mailto):|[^a-z]|[#\/])/i});
+            area.innerHTML = '<div class="col-12">' + clean + '</div>';
+            // done
+            return;
+          } catch (e) {
+            console.error('Failed to sanitize/insert server HTML', e);
+            // continue to fallback rendering
+          }
+        }
+
+        // Build params from session JSON (if available) or URL query string
+        const params = {};
+        if (serverData) {
+          // leave params empty; renderJson will use serverData directly below
+        } else {
+          const qs = (window.location.search || '').replace(/^\?/, '');
+          if (qs) {
+            qs.split('&').forEach(function (pair) {
+              if (!pair) return;
+              const parts = pair.split('=');
+              const key = decode(parts[0] || '').trim();
+              const val = decode(parts[1] || '');
+              if (!key) return;
+              params[key] = val;
+            });
+          }
+        }
+
+        function renderJson(obj) {
+          if (!obj) return;
+          // Pretty-print known keys first
+          if (obj.file) area.appendChild(makeRow('File Name', safeText(String(obj.file).split('\\').pop().split('/').pop())));
+          if (obj.fileType) area.appendChild(makeRow('File Type', safeText(obj.fileType)));
+          if (obj.name) area.appendChild(makeRow('Name', safeText(obj.name)));
+          if (obj.phone) area.appendChild(makeRow('Phone', safeText(obj.phone)));
+          if (obj.note) area.appendChild(makeRow('Note', '<div style="white-space:pre-wrap">' + safeText(obj.note) + '</div>'));
+
+          // Append the full JSON for inspection
+          const jsonPre = document.createElement('pre');
+          jsonPre.textContent = JSON.stringify(obj, null, 2);
+          area.appendChild(makeRow('Server JSON', jsonPre.outerHTML));
+        }
         function makeRow(label, valueHtml) {
           const col = document.createElement('div');
           col.className = 'col-12';
@@ -76,26 +128,30 @@
           return col;
         }
 
-        const name = params.name || '';
-        const phone = params.phone || '';
-        const note = params.note || '';
-        const file = params.file || '';
-        const fileType = params.fileType || '';
-
-        if (!file) {
-          area.appendChild(makeRow('', '<span class="text-muted">No file data found.</span>'));
+        if (serverData) {
+          renderJson(serverData);
         } else {
-          const fileDisplay = safeText(file.split('\\').pop().split('/').pop());
-          area.appendChild(makeRow('File Name', fileDisplay));
-          if (fileType) area.appendChild(makeRow('File Type', safeText(fileType)));
-          
-          // Uncomment below to display name, phone, note:
-          // if (name) area.appendChild(makeRow('Name', safeText(name)));
-          // if (phone) area.appendChild(makeRow('Phone', safeText(phone)));
-          // if (note) {
-          //   const noteHtml = '<div style="white-space:pre-wrap">' + safeText(note) + '</div>';
-          //   area.appendChild(makeRow('Note', noteHtml));
-          // }
+          const name = params.name || '';
+          const phone = params.phone || '';
+          const note = params.note || '';
+          const file = params.file || '';
+          const fileType = params.fileType || '';
+
+          if (!file) {
+            area.appendChild(makeRow('', '<span class="text-muted">No file data found.</span>'));
+          } else {
+            const fileDisplay = safeText(file.split('\\').pop().split('/').pop());
+            area.appendChild(makeRow('File Name', fileDisplay));
+            if (fileType) area.appendChild(makeRow('File Type', safeText(fileType)));
+            
+            // Uncomment below to display name, phone, note:
+            // if (name) area.appendChild(makeRow('Name', safeText(name)));
+            // if (phone) area.appendChild(makeRow('Phone', safeText(phone)));
+            // if (note) {
+            //   const noteHtml = '<div style="white-space:pre-wrap">' + safeText(note) + '</div>';
+            //   area.appendChild(makeRow('Note', noteHtml));
+            // }
+          }
         }
       })();
     </script>
