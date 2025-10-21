@@ -86,6 +86,61 @@
           }
         }
 
+        // Start polling for score report if we got a "processing" status
+        if (serverData && serverData.status === 'processing') {
+          area.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-3 text-muted">جاري معالجة الملف... برجاء الانتظار</p></div>';
+          
+          let pollAttempts = 0;
+          const maxAttempts = 60; // Try for 60 seconds max
+          
+          const pollInterval = setInterval(async function() {
+            pollAttempts++;
+            
+            try {
+              const resp = await fetch('https://mohammedaboelela.pythonanywhere.com/get_score');
+              
+              if (!resp.ok) {
+                console.warn('Score not ready yet, attempt:', pollAttempts);
+                
+                if (pollAttempts >= maxAttempts) {
+                  clearInterval(pollInterval);
+                  area.innerHTML = '<div class="col-12"><div class="alert alert-warning">⚠️ استغرقت المعالجة وقتاً أطول من المتوقع. برجاء المحاولة مرة أخرى أو التواصل مع الدعم الفني.</div></div>';
+                }
+                return;
+              }
+              
+              const contentType = (resp.headers && resp.headers.get && resp.headers.get('content-type')) || '';
+              
+              // If we got HTML, it's ready!
+              if (contentType.indexOf('text/html') !== -1) {
+                const html = await resp.text();
+                const clean = DOMPurify.sanitize(html, {ALLOWED_URI_REGEXP: /^(?:(?:http|https|mailto):|[^a-z]|[#\/])/i});
+                area.innerHTML = '<div class="col-12">' + clean + '</div>';
+                clearInterval(pollInterval);
+                console.log('✅ Score report loaded successfully');
+                return;
+              }
+              
+              // If still processing, continue polling
+              const data = await resp.json();
+              if (data.status !== 'processing') {
+                // Got some other response, display it
+                clearInterval(pollInterval);
+                renderJson(data);
+              }
+              
+            } catch (err) {
+              console.error('Polling error:', err);
+              if (pollAttempts >= maxAttempts) {
+                clearInterval(pollInterval);
+                area.innerHTML = '<div class="col-12"><div class="alert alert-danger">❌ حدث خطأ أثناء تحميل النتيجة. برجاء المحاولة مرة أخرى.</div></div>';
+              }
+            }
+          }, 1000); // Poll every 1 second
+          
+          return ; // Exit here, polling will handle the rest
+        }
+
         // Build params from session JSON (if available) or URL query string
         const params = {};
         if (serverData) {

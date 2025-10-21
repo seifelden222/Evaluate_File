@@ -36,12 +36,10 @@
     // const phone = (phoneEl && phoneEl.value || '').trim();
     // const note = (noteEl && noteEl.value || '').trim();
 
-    // Get file info (name + type)
+    // Get file name only
     let fileName = "";
-    let fileType = "";
     if (fileEl && fileEl.files && fileEl.files.length > 0) {
       fileName = fileEl.files[0].name || "";
-      fileType = fileEl.files[0].type || "";
     } else if (fileEl && fileEl.value) {
       fileName = String(fileEl.value).split("\\").pop().split("/").pop();
     }
@@ -53,28 +51,13 @@
       ok = false;
     }
 
-    // Only send file and fileType to backend (name, phone, note not included)
-    return {ok, data: {file: fileName, fileType: fileType}};
-
-    // To include all fields, uncomment the line below and comment out the line above:
-    // return { ok, data: { name, phone, file: fileName, fileType: fileType, note } };
+    // Only send file name to backend
+    return {ok, data: {file: fileName}};
   }
 
   function buildQuery(data) {
-    // Only file and fileType
-    return (
-      "?file=" +
-      encodeURIComponent(data.file) +
-      "&fileType=" +
-      encodeURIComponent(data.fileType)
-    );
-
-    // Uncomment below to include name, phone, note in query string:
-    // return '?name=' + encodeURIComponent(data.name) +
-    //   '&phone=' + encodeURIComponent(data.phone) +
-    //   '&file=' + encodeURIComponent(data.file) +
-    //   '&fileType=' + encodeURIComponent(data.fileType) +
-    //   '&note=' + encodeURIComponent(data.note);
+    // Only file name
+    return "?file=" + encodeURIComponent(data.file);
   }
 
   async function handleSubmit(ev) {
@@ -91,15 +74,10 @@
     try {
       const formData = new FormData();
       if (fileEl && fileEl.files && fileEl.files.length > 0) {
-        formData.append("file", fileEl.files[0]); // actual file
+        formData.append("file", fileEl.files[0]); 
       }
 
-      // Also send fileType as a plain field for convenience
-      if (fileEl && fileEl.files && fileEl.files.length > 0) {
-        formData.append('fileType', fileEl.files[0].type || '');
-      }
-
-      const resp = await fetch("http://127.0.0.1:8000/send_file", {
+      const resp = await fetch("https://mohammedaboelela.pythonanywhere.com/send_files", {
         method: "POST",
         body: formData, // FormData automatically sets correct Content-Type with boundary
       });
